@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-Type" content="text/html; charset=utf-8"/>
+        <title>Timer</title>
+        <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+        <style>
+            body{
+                text-align : center;
+                width:100%;
+                height:100%;
+                padding: 0;
+                margin : 0;
+            }
+            #clock{
+                font-family: "Impact";
+                font-size : 80px;
+                width : 100%;
+            }
+            #timer_clock{
+                position : absolute;
+                top:15%;
+                font-family: "Impact";
+                font-size : 1500%;
+                width : 100%;
+            }
+        </style>
+        <script>
+            var init_h = 0, init_m = 0, init_s = 30;
+            var timer = '', sw = false, timerInterval;
+            function timerSetting(){
+                var hours = (typeof $('#timer_h').val() !== 'undefined') ? parseInt($('#timer_h').val()) : init_h,
+                    minutes = (typeof $('#timer_m').val() !== 'undefined') ? parseInt($('#timer_s').val()) : init_m,
+                    seconds = (typeof $('#timer_s').val() !== 'undefined') ? parseInt($('#timer_m').val()) : init_s;
+                timer = '';
+                timer += ((hours <10)?  '0' : '' )+hours;
+                timer += ((minutes <10)? ':0' : ':')+minutes;
+                timer += ((seconds <10)? ':0' : ':')+seconds;
+                $('#timer_clock').text(timer);
+            }
+            function timerReset(){
+                timer = '';
+                $('#timer_clock').text('00:00:00');
+            }
+            function timerStart(){
+                timerInterval = setInterval("timerCalualte()", 1000);
+            }
+            function timerStop(){
+                clearInterval(timerInterval);
+            }
+            function timerCalualte(){
+                var splitStr = timer.split(':'),
+                    seconds = parseInt(splitStr[2]),
+                    minutes = parseInt(splitStr[1]),
+                    hours = parseInt(splitStr[0]);
+                if(seconds == 0 && minutes ==0){
+                    clearInterval(timerInterval);
+                    sw = false;
+                }
+                seconds--;
+                if (seconds < 0 ) {
+                    if (minutes == 0){
+                        clearInterval(timerInterval);
+                        return 0;
+                    } 
+                    seconds = 59;
+                    minutes--;
+                    if(minutes < 0 ) {
+                        minutes = '59';
+                        hours--;
+                    }
+                }
+                timer = '';
+                timer += ((hours <10)?  '0' : '' )+hours;
+                timer += ((minutes <10)? ':0' : ':')+minutes;
+                timer += ((seconds <10)? ':0' : ':')+seconds;
+                
+                $('#timer_clock').text(timer);
+            }
+            function curTime() {
+                $("#clock").text("00:00:00");
+                setInterval(function () {
+                        var curDate = new Date();
+                        var hours = curDate.getHours();
+                        var minutes = curDate.getMinutes();
+                        var seconds = curDate.getSeconds();
+
+                        var time = '';
+                        time += ((hours <10)?  '0' : '' )+hours;
+                        time += ((minutes <10)? ':0' : ':')+minutes;
+                        time += ((seconds <10)? ':0' : ':')+seconds;
+
+                        $("#clock").text(time);
+                }, 1000);   
+            }
+            $(function(){
+                var ngui, nwin;
+                if(typeof require !== 'undefined'){
+                   ngui = require('nw.gui');
+                   nwin = ngui.Window.get();
+                   nwin.enterFullscreen();
+                }
+                timerSetting();
+                curTime();
+                $(document).keydown(function(e){
+                    if ( e.keyCode === 83 ) {
+                        if(sw == false){
+                            sw = true;
+                            timerStart();
+                        }
+                        else 
+                            return -1;
+                            
+                    }
+                    if ( e.keyCode === 80 ) {
+                        if( sw == true ){
+                            timerStop();
+                            sw = false;   
+                        }
+                    }
+                    if ( e.keyCode === 82 ) {
+                        if( sw == false)
+                            timerSetting();
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+        Current Time
+        <div id="clock"></div>
+        <br>
+        Timer  Method : Keyborad Down[(S) Start, (P) Pause, (R) Reset]
+        <div id="timer_clock">00:00</div>
+        
+    </body>
+</html>
