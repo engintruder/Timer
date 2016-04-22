@@ -79,7 +79,6 @@
                 timer += ((hours <10)?  '0' : '' )+hours;
                 timer += ((minutes <10)? ':0' : ':')+minutes;
                 timer += ((seconds <10)? '<span class="sec-style">:0' : '<span class="sec-style">:')+seconds+'</span>';
-		console.log(timer);
                 $('#timer_clock').html(timer);
             }
             function curTime() {
