@@ -14,19 +14,24 @@
             }
             #clock{
                 font-family: "Impact";
-                font-size : 80px;
-                width : 100%;
-            }
-            #timer_clock{
-                position : absolute;
-                top:15%;
-                font-family: "Impact";
                 font-size : 1500%;
                 width : 100%;
             }
+            #timer_clock{
+                top:40%;
+                font-family: "Impact";
+                font-size : 130px;
+                width : 100%;
+            }
+	    /***
+		if timer second showing, sec-style must disable
+	    ***/
+	    .sec-style{
+		display: none;
+	    }
         </style>
         <script>
-            var init_h = 0, init_m = 0, init_s = 30;
+            var init_h = 1, init_m = 15, init_s = 00;
             var timer = '', sw = false, timerInterval;
             function timerSetting(){
                 var hours = (typeof $('#timer_h').val() !== 'undefined') ? parseInt($('#timer_h').val()) : init_h,
@@ -73,9 +78,9 @@
                 timer = '';
                 timer += ((hours <10)?  '0' : '' )+hours;
                 timer += ((minutes <10)? ':0' : ':')+minutes;
-                timer += ((seconds <10)? ':0' : ':')+seconds;
-                
-                $('#timer_clock').text(timer);
+                timer += ((seconds <10)? '<span class="sec-style">:0' : '<span class="sec-style">:')+seconds+'</span>';
+		console.log(timer);
+                $('#timer_clock').html(timer);
             }
             function curTime() {
                 $("#clock").text("00:00:00");
@@ -88,9 +93,9 @@
                         var time = '';
                         time += ((hours <10)?  '0' : '' )+hours;
                         time += ((minutes <10)? ':0' : ':')+minutes;
-                        time += ((seconds <10)? ':0' : ':')+seconds;
+                        time += ((seconds <10)? '<span class="sec-style">:0' : '<span class="sec-style">:')+seconds+'</span>';
 
-                        $("#clock").text(time);
+                        $("#clock").html(time);
                 }, 1000);   
             }
             $(function(){
@@ -130,8 +135,7 @@
         Current Time
         <div id="clock"></div>
         <br>
-        Timer  Method : Keyborad Down[(S) Start, (P) Pause, (R) Reset]
-        <div id="timer_clock">00:00</div>
-        
+	Timer Function : Keyborad Down[(S) Start, (P) Pause, (R) Reset]<br><br>
+        <div id="timer_clock">00:00:00</div>
     </body>
 </html>
