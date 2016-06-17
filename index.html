@@ -31,7 +31,7 @@
 	    }
         </style>
         <script>
-            var init_h = 1, init_m = 15, init_s = 00;
+            var init_h = 1, init_m = 10, init_s = 00;
             var timer = '', sw = false, timerInterval;
             function timerSetting(){
                 var hours = (typeof $('#timer_h').val() !== 'undefined') ? parseInt($('#timer_h').val()) : init_h,
@@ -40,8 +40,9 @@
                 timer = '';
                 timer += ((hours <10)?  '0' : '' )+hours;
                 timer += ((minutes <10)? ':0' : ':')+minutes;
-                timer += ((seconds <10)? ':0' : ':')+seconds;
-                $('#timer_clock').text(timer);
+                timer += ((seconds <10)? '<span class="sec-style">:0' : '<span class="sec-style">:')+seconds+'</span>';
+                $('#timer_clock').html(timer);
+                console.log(timer);
             }
             function timerReset(){
                 timer = '';
@@ -58,23 +59,23 @@
                     seconds = parseInt(splitStr[2]),
                     minutes = parseInt(splitStr[1]),
                     hours = parseInt(splitStr[0]);
-                if(seconds == 0 && minutes ==0){
+                console.log(hours + ':' + minutes + ':' + seconds);
+                if(seconds == 0 && minutes == 0 && hours == 0){
                     clearInterval(timerInterval);
                     sw = false;
+                    return 0;
+                }
+                if (minutes == 0 && seconds == 0 && hours != 0) {
+                    hours--;
+                    minutes = 59;
+                    seconds = 60;
+                }
+
+                if (seconds == 0 ) {
+                    minutes--;
+                    seconds = 60;
                 }
                 seconds--;
-                if (seconds < 0 ) {
-                    if (minutes == 0){
-                        clearInterval(timerInterval);
-                        return 0;
-                    } 
-                    seconds = 59;
-                    minutes--;
-                    if(minutes < 0 ) {
-                        minutes = '59';
-                        hours--;
-                    }
-                }
                 timer = '';
                 timer += ((hours <10)?  '0' : '' )+hours;
                 timer += ((minutes <10)? ':0' : ':')+minutes;
@@ -131,10 +132,11 @@
         </script>
     </head>
     <body>
-        Current Time
+        현재 시간
         <div id="clock"></div>
         <br>
-	Timer Function : Keyborad Down[(S) Start, (P) Pause, (R) Reset]<br><br>
-        <div id="timer_clock">00:00:00</div>
+	    <!--Timer Function : Keyborad Down[(S) Start, (P) Pause, (R) Reset]<br><br>-->
+        남은 시간
+        <div id="timer_clock">00:00<span class="sec-style">:00</span></div>
     </body>
 </html>
